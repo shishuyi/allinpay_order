@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>缴费系统</title>
+    <link rel="stylesheet" href="/allinpay_order/public/static/css/weui.css"/>
+    <script type="text/javascript" src="/alinpay_order/public/static/js/jquery.min.js"></script>
+</head>
+<body ontouchstart>
+
+<div class="page">
+    <div class="page__hd">
+        <h1 class="page__title">通联支付-缴费系统</h1>
+    </div>
+
+    <div class="page__bd">
+        <form action="{:url('order/index')}" method="post" >
+        <div class="weui-cells weui-cells_form">
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">订单号</label></div>
+                <div class="weui-cell__bd">
+                    <input name="oid" class="weui-input" placeholder="请输入学籍号"/>
+                    <!--<input class="weui-input" type="number" pattern="[0-9]*" placeholder="请输入订单号"/>-->
+                </div>
+            </div>
+            <div class="weui-cells">
+                <div class="weui-cell weui-cell_select weui-cell_select-after">
+                    <div class="weui-cell__hd">
+                        <label class="weui-label">学&nbsp;&nbsp;&nbsp;校</label>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <select class="weui-select" name="sname">
+                            <option value="1">贵州大学</option>
+                            <option value="2">贵州师范大学</option>
+                            <option value="3">贵州财经大学</option>
+                            <option value="4">贵州民族大学</option>
+                            <option value="5">贵州医科大学</option>
+                            <option value="6">贵州中医学院</option>
+                            <option value="7">遵义医学院</option>
+                            <option value="8">贵阳学院</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <br><br>
+            <div class="weui-btn-area">
+                <input id="button" class="weui-btn weui-btn_primary" type="submit"/>
+            </div>
+        </div></form>
+    </div>
+</div>
+
+</body>
+
+<script>
+
+    $("#button").click(function () {
+        billingQuery();
+    })
+
+    function billingQuery() {
+        var plateNumber = $(".car_input").attr("data-pai");
+        var qr = $('#Model').val();
+        var server = $('#Server').val();
+        console.log(plateNumber);
+        console.log(qr);
+        console.log(server);
+        try {
+            if (plateNumber != '' && plateNumber.length >= 7) {
+
+            }
+            else {
+                alert('请输入完整车牌！');
+                return;
+            }
+        } catch (e) {
+            alert('请输入完整车牌！');
+            return;
+        }
+        var url = server + '/api/ParkQuery/' + qr + '&' + plateNumber;
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            //dataType: "jsonp",
+            jsonp: "callback",
+            success: function (data) {
+                console.log(data);
+                if (data.code === '000') {
+                    //alert(data.url);
+                    window.location = data.data.url;
+                    //layer.closeAll();
+                }
+                else {
+                    alert(data.msg);
+                }
+            }
+        });
+    }
+
+</script>
+
+</html>
